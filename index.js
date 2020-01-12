@@ -8,7 +8,7 @@
 /**
  * ### Challenge `getName`
  * Example ✅
- * 
+ *
  * @instructions
  * Must return input object's `name` property.
  *
@@ -22,58 +22,66 @@ function getName(character) {
 /**
  * ### Challenge `getFilmCount`
  * MVP Challenge 🤓
- * 
+ *
  * @instructions
  * Must return the number of elements in the `films` property.
  *
  * Sample data expected output: 5
  */
 function getFilmCount(character) {
-  // TODO: Add your code inside the functions (others below).
-
+  return character.films.length;
 }
 
 /**
  * ### Challenge `getSecondStarshipName`
  * MVP Challenge 🤓
- * 
+ *
  * @instructions
  * Return second starship's name from `starships` property.
  * If length is 0. Return 'none'
 */
 function getSecondStarshipName(character) {
-  // TODO: Add your code here.
+  if (character.starships.length > 0){
+    return character.starships[1].name;
+  }else {
+    return "none"
+  }
 }
 
 /**
  * ### Challenge `getSummary`
  * MVP Challenge 🤓
- * 
+ *
  * @instructions
  * Combine specified field values and return them in the following string format:
  *    Template: `{name}, {height}cm, {mass}kg. Featured in {film count} films.`
  *    Result: `Luke Skywalker, 172cm, 77kg. Featured in 5 films.`
  */
 function getSummary(character) {
-  // TODO: Add your code here.
+  return `${character.name}, ${character.height}cm, ${character.mass}kg. Featured in ${getFilmCount(character)} films.`
 }
 
 /**
  * ### Challenge `getVehiclesCostInCreditsSumTotal`
  * MVP Challenge 🤓
- * 
+ *
  * @instructions
  * Sum the total cost in credits for all vehicles defined on the input character.
  * Sample data expected output: 8000
 */
 function getVehiclesCostInCreditsSumTotal(character) {
-  // TODO: Add your code here.
+  let chaVeh = character.vehicles;
+  var costArray = chaVeh.map((chaVeh)=>{
+    return chaVeh.cost_in_credits;
+  })
+  costArray.push(0)
+  return costArray.reduce((a, c) => a + c)
 }
 
 /**
  * ### Challenge `getStarshipPassengerAndCrewSumTotal`
  * MVP Challenge 🤓
- * 
+ *
  * @instructions
  * Sum the number of crew and passenger spots for all starships defined on the
  * input character.
@@ -81,13 +89,18 @@ function getVehiclesCostInCreditsSumTotal(character) {
  * Sample data expected output: 27
 */
 function getStarshipPassengerAndCrewSumTotal(character) {
-  // TODO: Add your code here.
+  let chaStar = character.starships;
+  var crewArray = chaStar.map((chaStar)=>{
+    return chaStar.crew + chaStar.passengers;
+  })
+  crewArray.push(0);
+  return crewArray.reduce((a, c) => a + c)
 }
 
 /**
  * ### Challenge `getNthFilm`
  * MVP Challenge 🤓
- * 
+ *
  * @instructions
  * Return the Nth `films` value (in this case title).
  * Rules: filmNumber starts at 1 and refers to the *first* film, and includes only the range 1-3.
@@ -98,13 +111,13 @@ function getStarshipPassengerAndCrewSumTotal(character) {
  * Given film #7, expected error: `There are only 3 Star Wars movies. Flan fiction excluded.`
 */
 function getNthFilm(character, filmNumber) {
-  // TODO: Add your code here.
+  return character.films[filmNumber-1];
 }
 
 /**
  * ### Challenge `getCargoCapacityTotal`
  * Stretch Goal 💪
- * 
+ *
  * @instructions
  * Sum the total cargo capacity for *all* vehicles and starships.
  * Some objects may not have a value for their cargo capacity.
@@ -112,13 +125,30 @@ function getNthFilm(character, filmNumber) {
  * Sample data expected output: 80124
 */
 function getCargoCapacityTotal(character) {
-  // TODO: Add your code here.
+  // Defines arrays that are to be used
+  const chaVeh = character.vehicles;
+  const chaStr = character.starships;
+  // Pulls the specific portion os the arrway that will be used
+  let cargoVeh = chaVeh.map((chaVeh)=>{
+    return chaVeh.cargo_capacity;
+  })
+  let cargoStr= chaStr.map((chaStr)=>{
+    return chaStr.cargo_capacity;
+  })
+  // Merge arrays into one
+  totalRes = cargoVeh.concat(cargoStr);
+  // removes all null vallues
+  filteRes = totalRes.filter((a) => {
+    return a != null;
+  })
+  // Sums up the array
+  return filteRes.reduce((a, c) => a + c);
 }
 
 /**
  * ### Challenge `getFastestStarshipName`
  * Stretch Goal 💪
- * 
+ *
  * @instructions
  * Find the fastest starship (by atmospheric speed.)
  * Determine the correct field to compare, and return the name of the fastest.
@@ -127,13 +157,23 @@ function getCargoCapacityTotal(character) {
  * Sample data expected output: `X-wing`
 */
 function getFastestStarshipName(character) {
-  // TODO: Add your code here.
+  const chaStr = character.starships;
+  const speedArr = chaStr.map((chaStr)=>{
+    return chaStr.max_atmosphering_speed;
+  });
+  if(speedArr.length > 0){
+    let max = speedArr.reduce((a, c)=>{return Math.max(a, c)});
+    let fstIndex = speedArr.findIndex((element) => {return element == max})
+    return chaStr[fstIndex].name;
+  }else {
+    return "none";
+  }
 }
 
 /**
  * ### Challenge `getLargestCargoStarshipModelName`
  * Stretch Goal 💪
- * 
+ *
  * @instructions
  * Determine the starship with the largest cargo capacity.
  * Return it's **_model_** property.
@@ -142,8 +182,19 @@ function getFastestStarshipName(character) {
  * Sample data expected output: `Lambda-class T-4a shuttle`
 */
 function getLargestCargoStarshipModelName(character) {
-  // TODO: Add your code here.
+  const chaStr = character.starships;
+  const speedArr = chaStr.map((chaStr)=>{
+    return chaStr.cargo_capacity;
+  });
+  if(speedArr.length > 0){
+    let max = speedArr.reduce((a, c)=>{return Math.max(a, c)});
+    let fstIndex = speedArr.findIndex((element) => {return element == max})
+    return chaStr[fstIndex].model;
+  }else {
+    return "none";
+  }
 }
+
 
 /**
  * ### Challenge `getSlowestVehicleOrStarshipName`
@@ -156,7 +207,17 @@ function getLargestCargoStarshipModelName(character) {
  *
 */
 function getSlowestVehicleOrStarshipName(character) {
-  // TODO: Add your code here.
+  const chaVeh = character.vehicles;
+  const speedArr = chaVeh.map((chaVeh)=>{
+    return chaVeh.max_atmosphering_speed;
+  });
+  if(speedArr.length > 0){
+    let min = speedArr.reduce((a, c)=>{return Math.min(a, c)});
+    let fstIndex = speedArr.findIndex((element) => {return element == min})
+    return chaVeh[fstIndex].name;
+  }else {
+    return "none";
+  }
 }
 
 
